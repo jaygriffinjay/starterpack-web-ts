@@ -16,17 +16,14 @@ export const routes: Route[] = [
     label: 'Home',
     devOnly: false,
   },
-  {
+  // Only exists in routes array during dev builds
+  ...(import.meta.env.DEV ? [{
     path: '/theme-editor',
     component: ThemeEditorPage,
     label: 'Theme Editor',
-    devOnly: true,  // Only available in dev mode
-  },
+    devOnly: true,
+  }] : []),
 ];
 
-// Filter routes based on environment
-export const getAvailableRoutes = () => {
-  return routes.filter(route => 
-    !route.devOnly || import.meta.env.DEV
-  );
-};
+// Returns all routes (already filtered by conditional spread above)
+export const getAvailableRoutes = () => routes;
