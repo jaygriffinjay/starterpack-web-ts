@@ -15,11 +15,11 @@ export const Title = styled.h1`
 
 export const Card = styled.div`
   background: ${props => props.theme.colors.hover};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 2px solid ${props => props.theme.colors.border};
   border-radius: ${props => props.theme.radii.medium};
   padding: ${props => props.theme.spacing.md};
   margin-bottom: ${props => props.theme.spacing.md};
-  box-shadow: ${props => props.theme.shadows.md};
+  box-shadow: ${props => props.theme.shadows.lg};
 `;
 
 export const Button = styled.button`

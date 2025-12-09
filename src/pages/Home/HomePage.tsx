@@ -10,11 +10,11 @@ const Container = styled.div`
 
 const Card = styled.div`
   background: ${props => props.theme.colors.hover};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 2px solid ${props => props.theme.colors.border};
   border-radius: ${props => props.theme.radii.medium};
   padding: ${props => props.theme.spacing.lg};
   margin-bottom: ${props => props.theme.spacing.md};
-  box-shadow: ${props => props.theme.shadows.md};
+  box-shadow: ${props => props.theme.shadows.lg};
 `;
 
 const StyledLink = styled(RouterLink)`
@@ -47,6 +47,14 @@ export function HomePage() {
           <Stack spacing="md">
             <Heading level={2}>Pages</Heading>
             <Stack spacing="sm">
+              <div>
+                <StyledLink to="/docs">📚 Documentation</StyledLink>
+                <Paragraph>
+                  <Text variant="caption">
+                    Architecture overview, design decisions, and component documentation
+                  </Text>
+                </Paragraph>
+              </div>
               <div>
                 <StyledLink to="/theme-editor">🎨 Theme Editor</StyledLink>
                 <Paragraph>

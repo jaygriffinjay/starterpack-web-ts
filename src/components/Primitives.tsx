@@ -81,19 +81,43 @@ export const Text = styled.span<{ variant?: 'body' | 'caption' | 'small' }>`
 // 3. LISTS
 // ============================================================================
 
-export const List = styled.ul<{ ordered?: boolean }>`
+interface ListProps {
+  ordered?: boolean;
+  children: ReactNode;
+}
+
+const Ul = styled.ul`
   font-family: ${props => props.theme.fonts.body};
   font-size: ${props => props.theme.fontSizes.base};
   color: ${props => props.theme.colors.text};
   line-height: 1.6;
   margin-bottom: ${props => props.theme.spacing.md};
   padding-left: ${props => props.theme.spacing.lg};
-  list-style-type: ${props => props.ordered ? 'decimal' : 'disc'};
+  list-style-type: disc;
   
   &:last-child {
     margin-bottom: 0;
   }
-`.withComponent((props: any) => props.ordered ? 'ol' : 'ul');
+`;
+
+const Ol = styled.ol`
+  font-family: ${props => props.theme.fonts.body};
+  font-size: ${props => props.theme.fontSizes.base};
+  color: ${props => props.theme.colors.text};
+  line-height: 1.6;
+  margin-bottom: ${props => props.theme.spacing.md};
+  padding-left: ${props => props.theme.spacing.lg};
+  list-style-type: decimal;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export function List({ ordered, children }: ListProps) {
+  const Component = ordered ? Ol : Ul;
+  return <Component>{children}</Component>;
+}
 
 export const ListItem = styled.li`
   margin-bottom: ${props => props.theme.spacing.xs};
@@ -151,7 +175,8 @@ const CodeBlockContainer = styled.div`
   border-radius: ${props => props.theme.radii.medium};
   overflow: hidden;
   background: ${props => props.theme.colors.hover};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 2px solid ${props => props.theme.colors.border};
+  box-shadow: ${props => props.theme.shadows.md};
   
   &:last-child {
     margin-bottom: 0;
@@ -161,34 +186,62 @@ const CodeBlockContainer = styled.div`
 const CodeBlockHeader = styled.div`
   padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
   background: ${props => props.theme.colors.background};
-  border-bottom: 1px solid ${props => props.theme.colors.border};
+  border-bottom: 2px solid ${props => props.theme.colors.border};
   font-family: ${props => props.theme.fonts.mono};
   font-size: ${props => props.theme.fontSizes.sm};
   color: ${props => props.theme.colors.text};
   opacity: 0.7;
 `;
 
-const Pre = styled.pre`
+const Pre = styled.pre<{ hasLineNumbers?: boolean }>`
   margin: 0;
   padding: ${props => props.theme.spacing.md};
+  padding-left: ${props => props.hasLineNumbers ? '0' : props.theme.spacing.md};
   overflow-x: auto;
   font-family: ${props => props.theme.fonts.mono};
   font-size: ${props => props.theme.fontSizes.sm};
   line-height: 1.5;
   color: ${props => props.theme.colors.text};
   background: ${props => props.theme.colors.hover};
+  counter-reset: ${props => props.hasLineNumbers ? 'line' : 'none'};
 `;
 
-const CodeText = styled.code`
+const CodeText = styled.code<{ hasLineNumbers?: boolean }>`
   font-family: ${props => props.theme.fonts.mono};
+  display: ${props => props.hasLineNumbers ? 'block' : 'inline'};
+  
+  ${props => props.hasLineNumbers && `
+    & > span {
+      display: block;
+      counter-increment: line;
+      padding-left: ${props.theme.spacing.xs};
+      
+      &::before {
+        content: counter(line);
+        display: inline-block;
+        width: 2em;
+        margin-right: 1em;
+        margin-left: -${props.theme.spacing.xs};
+        text-align: right;
+        color: ${props.theme.colors.text};
+        opacity: 0.4;
+        user-select: none;
+      }
+    }
+  `}
 `;
 
 export function CodeBlock({ language, children, showLineNumbers }: CodeBlockProps) {
+  // Split children into lines if showLineNumbers is true
+  const content = showLineNumbers && typeof children === 'string'
+    ? children.split('\n').map((line, i) => <span key={i}>{line || '\n'}</span>)
+    : children;
+  
   return (
     <CodeBlockContainer>
       {language && <CodeBlockHeader>{language}</CodeBlockHeader>}
-      <Pre>
-        <CodeText>{children}</CodeText>
+      <Pre hasLineNumbers={showLineNumbers}>
+        <CodeText hasLineNumbers={showLineNumbers}>{content}</CodeText>
       </Pre>
     </CodeBlockContainer>
   );
@@ -251,7 +304,7 @@ export const Callout = styled.div<{ type?: 'info' | 'success' | 'warning' | 'err
 
 export const Divider = styled.hr`
   border: none;
-  border-top: 1px solid ${props => props.theme.colors.border};
+  border-top: 2px solid ${props => props.theme.colors.primary};
   margin: ${props => props.theme.spacing.lg} 0;
 `;
 
