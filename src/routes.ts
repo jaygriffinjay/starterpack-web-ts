@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import { HomePage } from './pages/Home/HomePage';
 import { ThemeEditorPage } from './pages/ThemeEditor/ThemeEditorPage';
 import { DocsPage } from './pages/Docs/DocsPage';
+import { DocsPage2 } from './pages/Docs/DocsPage2';
 
 export interface Route {
   path: string;
@@ -29,6 +30,12 @@ export const routes: Route[] = [
       path: '/docs',
       component: DocsPage,
       label: 'Documentation',
+      devOnly: true,
+    },
+    {
+      path: '/docs/build-log',
+      component: DocsPage2,
+      label: 'Build Log',
       devOnly: true,
     },
   ] : []),
